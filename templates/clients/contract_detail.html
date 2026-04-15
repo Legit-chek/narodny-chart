@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ contract.title }} | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">{{ contract.company_name }}</span>
+        <h1>{{ contract.title }}</h1>
+        <p>Статус: {{ contract.get_status_display }}. Итоговая сумма: {{ contract.total_amount }} ₽.</p>
+    </div>
+</section>
+
+<section class="cards-grid two-columns">
+    <article class="panel-card">
+        <h2>Позиции договора</h2>
+        <table class="table">
+            <thead>
+                <tr><th>Услуга</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr>
+            </thead>
+            <tbody>
+                {% for item in contract.items.all %}
+                    <tr>
+                        <td>{{ item.service.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.unit_price }} ₽</td>
+                        <td>{{ item.subtotal }} ₽</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">Нет позиций.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+
+    <article class="panel-card">
+        <h2>Размещения по договору</h2>
+        <div class="stack-list">
+            {% for placement in contract.placements.all %}
+                <div class="list-item">
+                    <div>
+                        <strong>{{ placement.title }}</strong>
+                        <p>{{ placement.get_placement_type_display }} · {{ placement.get_status_display }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state">Пока нет размещений по этому договору.</div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

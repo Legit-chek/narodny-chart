@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Отчеты | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Аналитика и продажи</span>
+        <h1>Страница отчетов администратора</h1>
+        <p>Здесь собраны отчеты по продажам, популярности контента и формированию снимков рейтингов.</p>
+    </div>
+</section>
+
+<section class="cards-grid three-columns">
+    <article class="panel-card">
+        <h2>Продажи</h2>
+        <p>Отчет по договорам, услугам и итоговым суммам за период.</p>
+        <a class="button-link" href="{% url 'reports:sales' %}">Открыть</a>
+    </article>
+    <article class="panel-card">
+        <h2>Популярные песни</h2>
+        <p>Лидеры по голосам с фильтрацией по жанру.</p>
+        <a class="button-link" href="{% url 'reports:popular-songs' %}">Открыть</a>
+    </article>
+    <article class="panel-card">
+        <h2>Популярные исполнители</h2>
+        <p>Отдельный отчет по артистам с сортировкой по количеству голосов.</p>
+        <a class="button-link" href="{% url 'reports:popular-artists' %}">Открыть</a>
+    </article>
+</section>
+
+<section class="cards-grid two-columns">
+    <article class="panel-card">
+        <h2>Сформировать рейтинг</h2>
+        <form method="post" action="{% url 'reports:snapshot-create' %}" class="styled-form">
+            {% csrf_token %}
+            {% include "includes/form_fields.html" with form=snapshot_form %}
+            <button type="submit" class="button-link">Сформировать снимок</button>
+        </form>
+    </article>
+
+    <article class="panel-card">
+        <h2>Последние снимки</h2>
+        <div class="stack-list">
+            {% for snapshot in latest_snapshots %}
+                <div class="list-item">
+                    <div>
+                        <strong>{{ snapshot.title }}</strong>
+                        <p>{{ snapshot.get_rating_type_display }}{% if snapshot.genre %} · {{ snapshot.genre.name }}{% endif %}</p>
+                    </div>
+                    <span>{{ snapshot.created_at|date:"d.m.Y H:i" }}</span>
+                </div>
+            {% empty %}
+                <div class="empty-state">Снимки рейтинга еще не создавались.</div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

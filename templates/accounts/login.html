@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Вход | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-card">
+        <span class="eyebrow">С возвращением</span>
+        <h1>Вход в систему</h1>
+        <p>Войдите по электронной почте, чтобы голосовать, управлять договорами и смотреть личную историю участия.</p>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% include "includes/form_fields.html" %}
+            <button type="submit" class="button-link full-width">Войти</button>
+        </form>
+        <p class="register-subtext">Нет аккаунта? <a href="{% url 'accounts:register' %}">Зарегистрироваться</a></p>
+    </div>
+</section>
+{% endblock %}

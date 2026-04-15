@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section_title }} | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Встроенная админка</span>
+        <h1>{{ section_title }}</h1>
+        <p>{{ section_description }}</p>
+    </div>
+    <div class="header-actions">
+        {% if create_url %}
+            <a class="button-link" href="{{ create_url }}">{{ create_label }}</a>
+        {% endif %}
+        <a class="button-link ghost" href="{{ back_url }}">К дашборду</a>
+    </div>
+</section>
+
+<section class="panel-card">
+    {% if rows %}
+        <div class="admin-rows">
+            {% for row in rows %}
+                <article class="admin-row">
+                    <div class="admin-row-main">
+                        <h3>{{ row.title }}</h3>
+                        <p>{{ row.subtitle }}</p>
+                    </div>
+                    <div class="admin-row-details">
+                        {% for detail in row.details %}
+                            <span>{{ detail }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="admin-row-status">{{ row.status }}</div>
+                    <div class="admin-row-actions">
+                        {% if row.view_url %}
+                            <a href="{{ row.view_url }}">Открыть</a>
+                        {% endif %}
+                        {% if row.edit_url %}
+                            <a href="{{ row.edit_url }}">Редактировать</a>
+                        {% endif %}
+                        {% if row.delete_url %}
+                            <a href="{{ row.delete_url }}" class="danger-link">Удалить</a>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">Пока нет записей для этого раздела.</div>
+    {% endif %}
+</section>
+{% endblock %}

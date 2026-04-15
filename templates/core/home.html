@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Главная | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <span class="eyebrow">Народный чарт</span>
+        <h1>Выберите голосование и отметьте любимые песни.</h1>
+        <p>Сайт показывает актуальные опросы и общие музыкальные рейтинги без лишней сложности.</p>
+        <div class="hero-actions">
+            {% if request.user.is_authenticated %}
+                <a class="button-link" href="{% url 'charts:poll-list' %}">Открыть голосования</a>
+            {% else %}
+                <a class="button-link" href="{% url 'accounts:register' %}">Зарегистрироваться</a>
+                <a class="button-link ghost" href="{% url 'accounts:login' %}">Войти</a>
+            {% endif %}
+            <a class="button-link ghost" href="{% url 'charts:ratings' %}">Смотреть рейтинг</a>
+        </div>
+    </div>
+    <div class="hero-panel">
+        <div class="stat-card">
+            <span class="stat-number">{{ active_polls|length }}</span>
+            <span class="stat-label">активных голосований</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ popular_artists|length }}</span>
+            <span class="stat-label">исполнителей в рейтинге</span>
+        </div>
+    </div>
+</section>
+
+<section class="section-block">
+    <div class="section-heading">
+        <h2>Сейчас в топе</h2>
+        <a href="{% url 'charts:ratings' %}">Все рейтинги</a>
+    </div>
+    <div class="cards-grid two-columns">
+        <div class="panel-card">
+            <h3>Топ-песни</h3>
+            <ol class="rank-list">
+                {% for song in popular_songs %}
+                    <li>
+                        <strong>{{ song.title }}</strong>
+                        <span>{{ song.artist.name }}</span>
+                        <em>{{ song.total_votes }} голосов</em>
+                    </li>
+                {% empty %}
+                    <li>Пока еще нет голосов.</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="panel-card">
+            <h3>Топ-исполнители</h3>
+            <ol class="rank-list">
+                {% for artist in popular_artists %}
+                    <li>
+                        <strong>{{ artist.name }}</strong>
+                        <span>{{ artist.genre.name }}</span>
+                        <em>{{ artist.total_votes }} голосов</em>
+                    </li>
+                {% empty %}
+                    <li>Пока еще нет голосов.</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="section-block">
+    <div class="section-heading">
+        <h2>Текущие голосования</h2>
+        <a href="{% url 'charts:poll-list' %}">Все голосования</a>
+    </div>
+    <div class="cards-grid">
+        {% for poll in active_polls %}
+            <article class="content-card accent">
+                <span class="pill">{{ poll.genre.name }}</span>
+                <h3>{{ poll.title }}</h3>
+                <p>{{ poll.description|truncatechars:90|default:"Опрос по лучшим песням и исполнителям жанра." }}</p>
+                <div class="card-meta">
+                    <span>До {{ poll.ends_at|date:"d.m.Y H:i" }}</span>
+                    <span>{{ poll.song_options.count }} песен</span>
+                </div>
+                <a class="button-link" href="{{ poll.get_absolute_url }}">Проголосовать</a>
+            </article>
+        {% empty %}
+            <div class="empty-state">Сейчас нет активных голосований.</div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

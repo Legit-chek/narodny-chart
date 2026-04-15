@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Голосования | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Голосования</span>
+        <h1>Все голосования</h1>
+        <p>Выберите нужное и переходите к голосованию.</p>
+    </div>
+</section>
+
+<section class="filter-panel">
+    <form method="get" class="styled-form inline-form">
+        {% include "includes/form_fields.html" with form=filter_form %}
+        <button type="submit" class="button-link">Применить</button>
+    </form>
+</section>
+
+<div class="cards-grid">
+    {% for poll in polls %}
+        <article class="content-card accent">
+            <span class="pill">{{ poll.genre.name }}</span>
+            <h3>{{ poll.title }}</h3>
+            <p>{{ poll.description|truncatechars:90 }}</p>
+            <div class="card-meta">
+                <span>{% if poll.is_active %}Активно{% elif poll.is_finished %}Завершено{% else %}Скоро{% endif %}</span>
+                <span>До {{ poll.ends_at|date:"d.m.Y" }}</span>
+            </div>
+            <a class="button-link" href="{{ poll.get_absolute_url }}">Открыть</a>
+        </article>
+    {% empty %}
+        <div class="empty-state">Голосования по выбранному фильтру не найдены.</div>
+    {% endfor %}
+</div>
+
+{% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+        {% endif %}
+        <span>Страница {{ page_obj.number }} из {{ paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

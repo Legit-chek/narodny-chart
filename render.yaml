@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: narodny-chart
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn narodny_chart.wsgi:application"
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "narodny-chart.onrender.com"
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: "https://narodny-chart.onrender.com"
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: narodny-chart-db
+          property: connectionString
+
+databases:
+  - name: narodny-chart-db
+    plan: free

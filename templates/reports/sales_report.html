@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Продажи | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Отчет по продажам</span>
+        <h1>Продажи за период</h1>
+        <p>Фильтруйте договоры по датам и статусам, чтобы получить итоговую сумму продаж.</p>
+    </div>
+</section>
+
+<section class="filter-panel">
+    <form method="get" class="styled-form inline-form">
+        {% include "includes/form_fields.html" with form=filter_form %}
+        <button type="submit" class="button-link">Показать</button>
+    </form>
+    <div class="summary-chip">Итоговая сумма: {{ total_amount }} ₽</div>
+</section>
+
+<section class="panel-card">
+    <table class="table">
+        <thead>
+            <tr><th>Дата</th><th>Клиент</th><th>Статус</th><th>Сумма</th><th>Услуги</th></tr>
+        </thead>
+        <tbody>
+            {% for contract in contracts %}
+                <tr>
+                    <td>{{ contract.created_at|date:"d.m.Y" }}</td>
+                    <td>{{ contract.company_name }}</td>
+                    <td>{{ contract.get_status_display }}</td>
+                    <td>{{ contract.total_amount }} ₽</td>
+                    <td>
+                        {% for item in contract.items.all %}
+                            {{ item.service.name }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            Нет услуг
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">По выбранному фильтру договоры не найдены.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

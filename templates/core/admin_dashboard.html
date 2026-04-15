@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Админ-дашборд | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Администрирование</span>
+        <h1>Панель управления проектом</h1>
+        <p>Быстрый доступ к отчетам, договорам, голосованиям и данным платформы.</p>
+    </div>
+    <div class="header-actions">
+        <a class="button-link" href="{% url 'reports:dashboard' %}">Открыть отчеты</a>
+        <a class="button-link ghost" href="{% url 'admin:index' %}">Django admin</a>
+    </div>
+</section>
+
+<section class="metrics-grid">
+    <div class="metric-card"><strong>{{ users_count }}</strong><span>Пользователей</span></div>
+    <div class="metric-card"><strong>{{ active_polls_count }}</strong><span>Активных голосований</span></div>
+    <div class="metric-card"><strong>{{ contracts_count }}</strong><span>Договоров</span></div>
+    <div class="metric-card"><strong>{{ placements_count }}</strong><span>Размещений</span></div>
+    <div class="metric-card"><strong>{{ submissions_count }}</strong><span>Отправленных голосов</span></div>
+</section>
+
+<section class="cards-grid">
+    {% for section in admin_sections %}
+        <article class="content-card soft">
+            <h3>{{ section.title }}</h3>
+            <p>{{ section.description }}</p>
+            <a class="button-link" href="{{ section.url }}">Открыть раздел</a>
+        </article>
+    {% endfor %}
+</section>
+
+<section class="cards-grid two-columns">
+    <article class="panel-card">
+        <h3>Жанры с наибольшим каталогом песен</h3>
+        <table class="table">
+            <thead>
+                <tr><th>Жанр</th><th>Песен</th></tr>
+            </thead>
+            <tbody>
+                {% for genre in genres %}
+                    <tr><td>{{ genre.name }}</td><td>{{ genre.song_count }}</td></tr>
+                {% empty %}
+                    <tr><td colspan="2">Нет данных</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+    <article class="panel-card">
+        <h3>Последние договоры</h3>
+        <table class="table">
+            <thead>
+                <tr><th>Клиент</th><th>Статус</th><th>Сумма</th></tr>
+            </thead>
+            <tbody>
+                {% for contract in recent_contracts %}
+                    <tr>
+                        <td>{{ contract.company_name }}</td>
+                        <td>{{ contract.get_status_display }}</td>
+                        <td>{{ contract.total_amount }} ₽</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="3">Нет договоров</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+</section>
+{% endblock %}

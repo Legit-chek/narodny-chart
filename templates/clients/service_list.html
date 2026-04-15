@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Услуги | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Для клиентов</span>
+        <h1>Страница услуг</h1>
+        <p>Платные места в опросах, баннеры и спонсорские пакеты для музыкальных брендов, лейблов и промо-команд.</p>
+    </div>
+    {% if request.user.is_authenticated and request.user.is_client %}
+        <div class="header-actions">
+            <a class="button-link" href="{% url 'clients:contract-create' %}">Оформить заявку</a>
+        </div>
+    {% endif %}
+</section>
+
+<div class="cards-grid">
+    {% for service in services %}
+        <article class="content-card soft">
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+            <div class="price-tag">{{ service.price }} ₽</div>
+            <p class="service-note">{{ service.conditions }}</p>
+            {% if request.user.is_authenticated and request.user.is_client %}
+                <a class="button-link" href="{% url 'clients:contract-create' %}">Выбрать услугу</a>
+            {% else %}
+                <a class="button-link ghost" href="{% url 'accounts:register' %}">Стать клиентом</a>
+            {% endif %}
+        </article>
+    {% empty %}
+        <div class="empty-state">Услуги пока не опубликованы.</div>
+    {% endfor %}
+</div>
+{% endblock %}

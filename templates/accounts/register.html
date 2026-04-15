@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-card register-card">
+        <span class="eyebrow">Новый аккаунт</span>
+        <h1>Регистрация</h1>
+        <form method="post" class="styled-form register-form">
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+
+            <div class="register-grid">
+                <div class="field-group {% if form.name.errors %}has-error{% endif %}">
+                    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                    {{ form.name }}
+                    {% for error in form.name.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="field-group {% if form.email.errors %}has-error{% endif %}">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% for error in form.email.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="register-passwords">
+                <div class="field-group {% if form.password1.errors %}has-error{% endif %}">
+                    <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+                    {{ form.password1 }}
+                    {% if form.password1.help_text %}
+                        <small class="help-text">{{ form.password1.help_text }}</small>
+                    {% endif %}
+                    {% for error in form.password1.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="field-group {% if form.password2.errors %}has-error{% endif %}">
+                    <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                    {{ form.password2 }}
+                    {% for error in form.password2.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="register-actions">
+                <button type="submit" class="button-link full-width">Создать аккаунт</button>
+                <p class="register-subtext">Уже есть аккаунт? <a href="{% url 'accounts:login' %}">Войти</a></p>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

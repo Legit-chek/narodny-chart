@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section_title }} | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Встроенная админка</span>
+        <h1>{{ section_title }}</h1>
+        <p>{{ section_description }}</p>
+    </div>
+    <div class="header-actions">
+        <a class="button-link ghost" href="{{ back_url }}">Назад</a>
+    </div>
+</section>
+
+<section class="panel-card">
+    <form method="post" class="styled-form">
+        {% csrf_token %}
+        {% include "includes/form_fields.html" %}
+        <div class="button-row">
+            <button type="submit" class="button-link">{{ submit_label }}</button>
+            <a class="button-link ghost" href="{{ back_url }}">Отмена</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

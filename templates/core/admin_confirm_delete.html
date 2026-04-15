@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section_title }} | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Встроенная админка</span>
+        <h1>{{ section_title }}</h1>
+        <p>{{ section_description }}</p>
+    </div>
+</section>
+
+<section class="panel-card narrow-panel">
+    <h2>Подтвердите удаление</h2>
+    <p>Вы действительно хотите удалить {{ object_label }} «{{ object }}»?</p>
+    <form method="post" class="button-row">
+        {% csrf_token %}
+        <button type="submit" class="button-link danger-button">Удалить</button>
+        <a class="button-link ghost" href="{{ back_url }}">Отмена</a>
+    </form>
+</section>
+{% endblock %}

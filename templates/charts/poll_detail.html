@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}{{ poll.title }} | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">{{ poll.genre.name }}</span>
+        <h1>{{ poll.title }}</h1>
+        <p>{{ poll.description }}</p>
+    </div>
+    <div class="header-note">
+        <strong>Период:</strong> {{ poll.starts_at|date:"d.m.Y H:i" }} - {{ poll.ends_at|date:"d.m.Y H:i" }}
+    </div>
+</section>
+
+<section class="cards-grid two-columns">
+    <article class="panel-card vote-status-card">
+        {% if submission %}
+            <span class="status-badge status-done">Голос отправлен</span>
+            <h2>Вы уже проголосовали</h2>
+            <p>Этот опрос уже отправлен в общий рейтинг. Повторная отправка недоступна.</p>
+        {% elif draft_song_items or draft_artist_items %}
+            <span class="status-badge status-draft">Есть черновик</span>
+            <h2>Ваш выбор сохранен</h2>
+            <p>Ниже показано, что у вас сейчас выбрано. Можно изменить выбор или отправить его.</p>
+        {% else %}
+            <span class="status-badge status-new">Выбор еще не отправлен</span>
+            <h2>Вы еще не голосовали</h2>
+            <p>Отметьте песни и исполнителей, затем сохраните черновик или отправьте голос.</p>
+        {% endif %}
+    </article>
+
+    <article class="panel-card vote-status-card">
+        <h2>Сейчас выбрано</h2>
+        {% if submission %}
+            <ul class="result-list compact-list">
+                {% for item in submission_items %}
+                    <li>
+                        {% if item.song %}
+                            {{ item.song.title }} — {{ item.song.artist.name }}
+                        {% else %}
+                            {{ item.artist.name }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elif draft_song_items or draft_artist_items %}
+            <div class="selection-summary">
+                {% if draft_song_items %}
+                    <div>
+                        <strong>Песни</strong>
+                        <ul class="result-list compact-list">
+                            {% for song in draft_song_items %}
+                                <li>{{ song.title }} — {{ song.artist.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                {% if draft_artist_items %}
+                    <div>
+                        <strong>Исполнители</strong>
+                        <ul class="result-list compact-list">
+                            {% for artist in draft_artist_items %}
+                                <li>{{ artist.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="muted-text">Пока ничего не выбрано.</p>
+        {% endif %}
+    </article>
+</section>
+
+{% if submission %}
+    <section class="panel-card">
+        <h2>Ваш голос уже отправлен</h2>
+        <p>Повторная финальная отправка отключена. Ниже показано, что вошло в общий рейтинг.</p>
+        <ul class="result-list">
+            {% for item in submission_items %}
+                <li>
+                    {% if item.song %}
+                        <strong>Песня:</strong> {{ item.song.title }} — {{ item.song.artist.name }}
+                    {% else %}
+                        <strong>Исполнитель:</strong> {{ item.artist.name }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% else %}
+    <section class="cards-grid two-columns">
+        <article class="panel-card">
+            <h2>Что делать</h2>
+            <ul class="mini-list">
+                <li>Выберите любимые песни и исполнителей в рамках лимитов.</li>
+                <li>Нажмите «Сохранить черновик», если хотите вернуться позже.</li>
+                <li>Нажмите «Отправить голоса», чтобы добавить выбор в общий рейтинг.</li>
+            </ul>
+        </article>
+        <article class="panel-card">
+            <h2>Лимиты</h2>
+            <ul class="mini-list">
+                {% if poll.vote_for_songs %}
+                    <li>Песни: до {{ poll.max_song_choices }}</li>
+                {% endif %}
+                {% if poll.vote_for_artists %}
+                    <li>Исполнители: до {{ poll.max_artist_choices }}</li>
+                {% endif %}
+                <li>Повторная финальная отправка недоступна.</li>
+            </ul>
+        </article>
+    </section>
+
+    <section class="panel-card">
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% if form.song_choices %}
+                <div class="field-group">
+                    <label>{{ form.song_choices.label }}{% if poll.max_song_choices %} · до {{ poll.max_song_choices }}{% endif %}</label>
+                    {{ form.song_choices }}
+                    {% for error in form.song_choices.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if form.artist_choices %}
+                <div class="field-group">
+                    <label>{{ form.artist_choices.label }}{% if poll.max_artist_choices %} · до {{ poll.max_artist_choices }}{% endif %}</label>
+                    {{ form.artist_choices }}
+                    {% for error in form.artist_choices.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for error in form.non_field_errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+
+            <div class="button-row">
+                <button type="submit" name="action" value="save" class="button-link ghost">Сохранить черновик</button>
+                <button type="submit" name="action" value="submit" class="button-link">Отправить голоса</button>
+            </div>
+        </form>
+    </section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Рейтинги | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Музыкальная аналитика</span>
+        <h1>Страница рейтингов</h1>
+        <p>Смотрите лидеров по песням и исполнителям, сравнивайте жанры и следите за изменениями в интересах аудитории.</p>
+    </div>
+</section>
+
+<section class="filter-panel">
+    <form method="get" class="styled-form inline-form">
+        {% include "includes/form_fields.html" with form=filter_form %}
+        <button type="submit" class="button-link">Фильтровать</button>
+    </form>
+</section>
+
+<div class="cards-grid two-columns">
+    <article class="panel-card">
+        <h2>Популярные песни{% if selected_genre %}: {{ selected_genre.name }}{% endif %}</h2>
+        <table class="table">
+            <thead>
+                <tr><th>#</th><th>Песня</th><th>Исполнитель</th><th>Голоса</th></tr>
+            </thead>
+            <tbody>
+                {% for song in song_ratings %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ song.title }}</td>
+                        <td>{{ song.artist.name }}</td>
+                        <td>{{ song.total_votes }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">Нет данных</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+
+    <article class="panel-card">
+        <h2>Популярные исполнители{% if selected_genre %}: {{ selected_genre.name }}{% endif %}</h2>
+        <table class="table">
+            <thead>
+                <tr><th>#</th><th>Исполнитель</th><th>Жанр</th><th>Голоса</th></tr>
+            </thead>
+            <tbody>
+                {% for artist in artist_ratings %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ artist.name }}</td>
+                        <td>{{ artist.genre.name }}</td>
+                        <td>{{ artist.total_votes }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">Нет данных</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+</div>
+{% endblock %}

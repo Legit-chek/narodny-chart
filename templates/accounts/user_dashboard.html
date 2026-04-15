@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Личный кабинет | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Пользователь</span>
+        <h1>Личный кабинет</h1>
+        <p>Здесь собраны ваши отправленные голоса, черновики и актуальные голосования.</p>
+    </div>
+    <div class="header-actions">
+        <a class="button-link" href="{% url 'charts:poll-list' %}">Все голосования</a>
+        <a class="button-link ghost" href="{% url 'charts:ratings' %}">Рейтинги</a>
+    </div>
+</section>
+
+<section class="metrics-grid">
+    <div class="metric-card"><strong>{{ submissions|length }}</strong><span>Последних отправок</span></div>
+    <div class="metric-card"><strong>{{ draft_items_count }}</strong><span>Элементов в черновиках</span></div>
+    <div class="metric-card"><strong>{{ recommended_polls|length }}</strong><span>Рекомендуемых опросов</span></div>
+</section>
+
+<section class="cards-grid two-columns">
+    <article class="panel-card">
+        <h3>История участия</h3>
+        <div class="stack-list">
+            {% for submission in submissions %}
+                <div class="list-item">
+                    <div>
+                        <strong>{{ submission.poll.title }}</strong>
+                        <p>{{ submission.poll.genre.name }} · {{ submission.submitted_at|date:"d.m.Y H:i" }}</p>
+                    </div>
+                    <span class="pill">Отправлено</span>
+                </div>
+            {% empty %}
+                <div class="empty-state">Вы еще не отправляли голоса.</div>
+            {% endfor %}
+        </div>
+    </article>
+
+    <article class="panel-card">
+        <h3>Черновики голосов</h3>
+        <div class="stack-list">
+            {% for poll in draft_polls %}
+                <div class="list-item">
+                    <div>
+                        <strong>{{ poll.title }}</strong>
+                        <p>Черновик сохранен. Можно вернуться и завершить голосование.</p>
+                    </div>
+                    <a class="button-link ghost small" href="{{ poll.get_absolute_url }}">Открыть</a>
+                </div>
+            {% empty %}
+                <div class="empty-state">Нет сохраненных черновиков.</div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+<section class="section-block">
+    <div class="section-heading">
+        <h2>Рекомендуемые активные голосования</h2>
+    </div>
+    <div class="cards-grid">
+        {% for poll in recommended_polls %}
+            <article class="content-card accent">
+                <span class="pill">{{ poll.genre.name }}</span>
+                <h3>{{ poll.title }}</h3>
+                <p>{{ poll.description|truncatechars:120 }}</p>
+                <a class="button-link" href="{{ poll.get_absolute_url }}">Проголосовать</a>
+            </article>
+        {% empty %}
+            <div class="empty-state">Вы уже участвовали во всех текущих голосованиях.</div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

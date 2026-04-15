@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Рекламное размещение | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Маркетинг</span>
+        <h1>Редактирование рекламного места</h1>
+        <p>Укажите тип размещения, договор, ссылку на баннер и период показа.</p>
+    </div>
+</section>
+
+<section class="panel-card">
+    <form method="post" class="styled-form">
+        {% csrf_token %}
+        {% include "includes/form_fields.html" %}
+        <button type="submit" class="button-link">Сохранить размещение</button>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Популярные песни | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Контент-аналитика</span>
+        <h1>Популярные песни</h1>
+        <p>Сортировка по количеству голосов и фильтрация по жанру.</p>
+    </div>
+</section>
+
+<section class="filter-panel">
+    <form method="get" class="styled-form inline-form">
+        {% include "includes/form_fields.html" with form=filter_form %}
+        <button type="submit" class="button-link">Фильтровать</button>
+    </form>
+</section>
+
+<section class="panel-card">
+    <table class="table">
+        <thead>
+            <tr><th>#</th><th>Песня</th><th>Исполнитель</th><th>Жанр</th><th>Голоса</th></tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.artist.name }}</td>
+                    <td>{{ item.genre.name }}</td>
+                    <td>{{ item.total_votes }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">Нет данных.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

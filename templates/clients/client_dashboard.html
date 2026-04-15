@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Кабинет клиента | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Клиент</span>
+        <h1>Кабинет клиента</h1>
+        <p>Следите за статусами договоров, управляйте рекламными размещениями и обновляйте данные компании.</p>
+    </div>
+    <div class="header-actions">
+        <a class="button-link" href="{% url 'clients:contract-create' %}">Новый договор</a>
+        <a class="button-link ghost" href="{% url 'clients:placement-create' %}">Новое размещение</a>
+    </div>
+</section>
+
+<section class="cards-grid two-columns">
+    <article class="panel-card">
+        <h2>Профиль клиента</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% include "includes/form_fields.html" with form=profile_form %}
+            <button type="submit" class="button-link">Сохранить профиль</button>
+        </form>
+    </article>
+
+    <article class="panel-card">
+        <h2>Актуальные услуги</h2>
+        <div class="stack-list">
+            {% for service in services %}
+                <div class="list-item">
+                    <div>
+                        <strong>{{ service.name }}</strong>
+                        <p>{{ service.description|truncatechars:100 }}</p>
+                    </div>
+                    <span>{{ service.price }} ₽</span>
+                </div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+<section class="cards-grid two-columns">
+    <article class="panel-card">
+        <div class="section-heading">
+            <h2>Договоры</h2>
+            <a href="{% url 'clients:contract-create' %}">Оформить заявку</a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr><th>Название</th><th>Статус</th><th>Сумма</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for contract in contracts %}
+                    <tr>
+                        <td>{{ contract.title }}</td>
+                        <td>{{ contract.get_status_display }}</td>
+                        <td>{{ contract.total_amount }} ₽</td>
+                        <td><a href="{{ contract.get_absolute_url }}">Открыть</a></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">Договоров пока нет.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+
+    <article class="panel-card">
+        <div class="section-heading">
+            <h2>Рекламные места</h2>
+            <a href="{% url 'clients:placement-create' %}">Добавить</a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr><th>Название</th><th>Тип</th><th>Статус</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for placement in placements %}
+                    <tr>
+                        <td>{{ placement.title }}</td>
+                        <td>{{ placement.get_placement_type_display }}</td>
+                        <td>{{ placement.get_status_display }}</td>
+                        <td><a href="{% url 'clients:placement-update' placement.pk %}">Редактировать</a></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">Размещений пока нет.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+</section>
+{% endblock %}

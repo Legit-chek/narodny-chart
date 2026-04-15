@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Новый договор | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Заявка клиента</span>
+        <h1>Страница договора / заявки</h1>
+        <p>Выберите услуги, заполните контактные данные и отправьте заявку на рассмотрение администратору.</p>
+    </div>
+</section>
+
+<section class="panel-card">
+    <form method="post" class="styled-form">
+        {% csrf_token %}
+        {% include "includes/form_fields.html" %}
+        <button type="submit" class="button-link">Отправить заявку</button>
+    </form>
+</section>
+{% endblock %}

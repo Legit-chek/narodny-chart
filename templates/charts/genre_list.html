@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Жанры | {{ brand_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Музыкальный каталог</span>
+        <h1>Каталог жанров</h1>
+        <p>Выбирайте жанр, переходите в активные голосования и исследуйте рейтинги по направлениям.</p>
+    </div>
+</section>
+
+<div class="cards-grid">
+    {% for genre in genres %}
+        <article class="content-card soft">
+            <h3>{{ genre.name }}</h3>
+            <p>{{ genre.description|default:"Описание жанра будет заполнено администратором." }}</p>
+            <div class="card-meta">
+                <span>{{ genre.songs.count }} песен</span>
+                <span>{{ genre.artists.count }} исполнителей</span>
+            </div>
+            <div class="button-row">
+                <a class="button-link" href="{% url 'charts:poll-list' %}?genre={{ genre.id }}">Голосования</a>
+                <a class="button-link ghost" href="{% url 'charts:ratings' %}?genre={{ genre.id }}">Рейтинг</a>
+            </div>
+        </article>
+    {% empty %}
+        <div class="empty-state">Жанры пока не добавлены.</div>
+    {% endfor %}
+</div>
+{% endblock %}
