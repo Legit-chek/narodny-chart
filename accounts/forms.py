@@ -7,7 +7,15 @@ from core.forms import StyledFormMixin
 
 
 class LoginForm(StyledFormMixin, AuthenticationForm):
-    username = forms.EmailField(label="Email")
+    username = forms.CharField(label="Email")
+
+    def clean_username(self):
+        value = self.cleaned_data["username"].strip()
+        if value.lower() == "admin":
+            return "admin"
+        if "@" not in value:
+            raise forms.ValidationError("Для входа используйте email. Для администратора доступен логин admin.")
+        return value.lower()
 
 
 class UserRegistrationForm(StyledFormMixin, UserCreationForm):
