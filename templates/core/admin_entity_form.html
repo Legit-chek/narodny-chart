@@ -15,7 +15,7 @@
 </section>
 
 <section class="panel-card">
-    <form method="post" class="styled-form">
+    <form method="post" enctype="multipart/form-data" class="styled-form">
         {% csrf_token %}
         {% include "includes/form_fields.html" %}
         <div class="button-row">

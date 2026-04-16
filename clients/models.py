@@ -120,6 +120,7 @@ class AdPlacement(models.Model):
     placement_type = models.CharField("Тип размещения", max_length=16, choices=Types.choices)
     title = models.CharField("Название", max_length=255)
     description = models.TextField("Описание", blank=True)
+    image = models.ImageField("Файл баннера", upload_to="placements/", blank=True)
     image_url = models.URLField("URL баннера", blank=True)
     target_url = models.URLField("Ссылка перехода", blank=True)
     status = models.CharField("Статус", max_length=16, choices=Statuses.choices, default=Statuses.DRAFT)

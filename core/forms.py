@@ -33,13 +33,13 @@ class StyledFormMixin:
 class GenreAdminForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = Genre
-        fields = ("name", "slug", "description")
+        fields = ("name", "slug", "description", "image")
 
 
 class ArtistAdminForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = Artist
-        fields = ("name", "slug", "genre", "country", "bio", "image_url", "is_active")
+        fields = ("name", "slug", "genre", "country", "bio", "image", "image_url", "is_active")
 
 
 class SongAdminForm(StyledFormMixin, forms.ModelForm):
@@ -52,6 +52,7 @@ class SongAdminForm(StyledFormMixin, forms.ModelForm):
             "artist",
             "duration_seconds",
             "release_year",
+            "cover",
             "image_url",
             "description",
             "is_active",
@@ -208,6 +209,7 @@ class PlacementAdminForm(StyledFormMixin, forms.ModelForm):
             "placement_type",
             "title",
             "description",
+            "image",
             "image_url",
             "target_url",
             "status",

@@ -11,7 +11,9 @@ services:
       - key: DJANGO_ALLOWED_HOSTS
         value: "narodny-chart.onrender.com"
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
-        value: "https://narodny-chart.onrender.com"
+        value: "https://narodny-chart.onrender.com,https://*.onrender.com"
+      - key: DJANGO_SERVE_MEDIA
+        value: "True"
       - key: PYTHON_VERSION
         value: "3.12.4"
       - key: DJANGO_SECRET_KEY

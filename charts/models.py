@@ -9,6 +9,7 @@ class Genre(models.Model):
     name = models.CharField("Название", max_length=120, unique=True)
     slug = models.SlugField("Slug", unique=True)
     description = models.TextField("Описание", blank=True)
+    image = models.ImageField("Фото жанра", upload_to="genres/", blank=True)
 
     class Meta:
         verbose_name = "Жанр"
@@ -25,6 +26,7 @@ class Artist(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name="artists", verbose_name="Жанр")
     country = models.CharField("Страна", max_length=120, blank=True)
     bio = models.TextField("Описание", blank=True)
+    image = models.ImageField("Фото исполнителя", upload_to="artists/", blank=True)
     image_url = models.URLField("Изображение", blank=True)
     is_active = models.BooleanField("Активен", default=True)
 
@@ -45,6 +47,7 @@ class Song(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="songs", verbose_name="Исполнитель")
     duration_seconds = models.PositiveIntegerField("Длительность, сек", default=180)
     release_year = models.PositiveIntegerField("Год релиза", null=True, blank=True)
+    cover = models.ImageField("Обложка", upload_to="songs/", blank=True)
     image_url = models.URLField("Обложка", blank=True)
     description = models.TextField("Описание", blank=True)
     is_active = models.BooleanField("Активна", default=True)
